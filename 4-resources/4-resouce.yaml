@@ -1,0 +1,49 @@
+Parameters:
+  amiid:
+    Description: latest image id 
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
+
+  bucketname:
+    Description: bucket name 
+    Type: String
+    
+
+Resources:
+
+     s3Bucket:
+        Type: AWS::S3::Bucket
+        Properties: 
+          BucketName: !Ref bucketname
+          Tags:
+            - Key: name
+              Value: rajibulbucket
+        DeletionPolicy: Retain 
+        UpdateReplacePolicy: Retain 
+
+     myEC2Instance:
+       Type: AWS::EC2::Instance
+       Properties:
+         ImageId: !Ref amiid
+         InstanceType: t2.micro
+         SecurityGroupIds:
+           - !Ref sshsg
+         Tags:
+           - Key: name
+             Value: rajibul
+
+       DependsOn: s3Bucket
+
+     sshsg:
+        Type: AWS::EC2::SecurityGroup
+        Properties: 
+          GroupDescription: "security group for ssh"
+          SecurityGroupIngress:
+            - IpProtocol: tcp
+              FromPort: 22 
+              ToPort: 22
+              CidrIp: 0.0.0.0/0
+          
+
+
+     

@@ -1,0 +1,16 @@
+
+Parameters:
+     bucketName: 
+         Type: String 
+         Description: Choose your bucket name 
+
+Resources:
+  s3Bucket:
+    Type: AWS::S3::Bucket
+    Properties: 
+      AccessControl:  PublicRead 
+      BucketName: !Ref bucketName 
+      
+      Tags:
+        - Key: name
+          Value: !Ref bucketName

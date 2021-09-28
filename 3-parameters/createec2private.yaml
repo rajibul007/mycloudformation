@@ -1,0 +1,61 @@
+Parameters:
+
+            keyname:
+              Description: Must choose the existing key name 
+              Type: AWS::EC2::KeyPair::KeyName
+
+            vpcname:
+              Description: vpc
+              Type: AWS::EC2::VPC::Id
+
+            servername:
+              Description: server name
+              Type: String
+
+            instancetype:
+              Description: choose instance type 
+              Type: String
+              AllowedValues: 
+                  - t2.micro
+                  - t2.nano
+                  - t2.small      
+              Default: t2.micro
+
+            mysubnet:
+              Description: choose subnet from list 
+              Type: AWS::EC2::Subnet::Id
+              
+            
+
+Resources:
+
+  myEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      KeyName: !Ref keyname 
+      ImageId: ami-0742b4e673072066f
+      InstanceType: !Ref instancetype
+      SubnetId: !Ref mysubnet 
+      SecurityGroupIds:
+         -  !Ref sshsg
+      Tags:
+        - Key: Name
+          Value: !Ref servername
+
+
+    
+     
+          
+  sshsg:
+     Type: AWS::EC2::SecurityGroup
+     Properties:
+       GroupName: sshsg
+       GroupDescription: sshsg
+       VpcId: !Ref vpcname
+       SecurityGroupIngress:
+         - IpProtocol: tcp
+           FromPort: 22
+           ToPort: 22
+           CidrIp: 0.0.0.0/0
+
+  
