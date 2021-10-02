@@ -1,0 +1,66 @@
+
+Metadata:
+   
+  instance: 
+         Description: ec2 creating with metadata and interdace type 
+
+  AWS::CloudFormation::Interface: 
+      ParameterGroups: 
+      - 
+        Label: 
+          default: "Network Configuration"
+        Parameters: 
+          - SubnetID
+          - SecurityGroupID
+      - 
+        Label: 
+          default: "Amazon EC2 Configuration"
+        Parameters: 
+          - InstanceType
+      ParameterLabels: 
+       SubnetID: 
+         default: "Which VPC should this be deployed to?"
+
+
+Parameters:
+
+  SubnetID:
+    Description: Subnet ID
+    Type: AWS::EC2::Subnet::Id
+
+  SecurityGroupID:
+    Description: Security Group
+    Type: AWS::EC2::SecurityGroup::Id
+
+  InstanceType:
+    Description: WebServer EC2 instance type (has default, AllowedValues)
+    Type: String
+    Default: t2.small
+    AllowedValues:
+      - t1.micro
+      - t2.nano
+      - t2.micro
+      - t2.small
+    ConstraintDescription: must be a valid EC2 instance type.
+
+
+  MyVPC:
+    Description: VPC to operate in
+    Type: AWS::EC2::VPC::Id
+
+    
+
+Resources: 
+
+  myec2instance:
+     Type: AWS::EC2::Instance
+     Properties:
+       AvailabilityZone: us-east-1a
+       ImageId: ami-0742b4e673072066f
+       InstanceType: !Ref InstanceType 
+       SecurityGroups:
+         - !Ref SecurityGroupID
+       SubnetId: !Ref SubnetID
+
+
+         
